@@ -68,13 +68,25 @@ public class GraphProcessor
 
 	public ArrayList<String> bfsPath(String u, String v)
 	{
+		ArrayList<String> path = new ArrayList<>();
+		//end of line
+		if (u == null || v == null)
+			return path;
 		
+		
+		return path;
 	}
 
 	public int diameter()
 	{
 		int max = 0;
-		
+		for( String uu : graph.keySet() ) {
+			for( String vv : graph.get(uu) ) {
+				int sz = bfsPath(uu,vv).size();
+				if ( max < sz)
+					max = sz;
+			}
+		}
 		
 		return max;
 	}
