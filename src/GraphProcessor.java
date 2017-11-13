@@ -68,17 +68,29 @@ public class GraphProcessor
 
 	public ArrayList<String> bfsPath(String u, String v)
 	{
-		// implementation
+		
 	}
 
 	public int diameter()
 	{
-		// implementation
+		int max = 0;
+		
+		
+		return max;
 	}
 
 	public int centrality(String v)
 	{
-		// implementation
+		int n = 0;
+		/* Lets count centrality as IN and OUT edges 
+		(at least once these edges will be used for path) */
+		for (String vv : graph.keySet()) {
+			for (String ee : graph.get(vv)) {
+				if (ee.equals(v))
+					n++;
+			}
+		}
+		return n + outDegree(v);
 	}
 
 }
