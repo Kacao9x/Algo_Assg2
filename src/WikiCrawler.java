@@ -15,19 +15,22 @@ import java.net.URL;
 
 
 public class WikiCrawler {
+    private static final String BASE_URL = "https://en.wikipedia.org";
+    
+    // other member fields and methods
     private String seedURL;
     private int max;
     private ArrayList<String> topics;
     private String fileName;
 
-    private static final String BASE_URL = "https://en.wikipedia.org";
-    // other member fields and methods
-
+    //private int requestCounter = 0;
+    
     public WikiCrawler(String seedUrl, int max, ArrayList<String> topics, String fileName) throws IOException {
         this.seedURL = seedUrl;
         this.max = max;
         this.topics = topics;
         this.fileName = fileName;
+        requestCounter = 0;
     }
 
     // NOTE: extractLinks takes the source HTML code, NOT a URL
@@ -110,17 +113,29 @@ public class WikiCrawler {
     }
 
     private String getContent(String seedURL) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
+    	
+    	if(seedURL == null) return "";
+    	
+    	//requestCounter++;
+    	StringBuilder stringBuilder = new StringBuilder();
         URL url = new URL(BASE_URL + seedURL);
+        
         InputStream inputStream = url.openStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String toRead;
+        
         while ((toRead = bufferedReader.readLine()) != null) {
             stringBuilder.append(toRead);
             stringBuilder.append(System.getProperty("line.separator"));
         }
-        return stringBuilder.toString();
+        
+        /* TAs recommend this to encapsulate the right content */
+    	int start = stringBuilder.toString().indexOf("<p>");
+    	int end = stringBuilder.toString().lastIndexOf("</p>");
+    	
+        return stringBuilder.toString().substring(start, end);
     }
+
 
     private boolean containTopics(String content) {
         for (String topic : topics) {
