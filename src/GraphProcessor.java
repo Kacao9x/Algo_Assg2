@@ -73,6 +73,30 @@ public class GraphProcessor
 		if (u == null || v == null)
 			return path;
 		
+		Queue<String> queue = new LinkedList<>();		//stack to store vertices to 
+		Set<String> visited = new HashSet<>();			//Hash map to store visited node 
+		Map <String,String> nextVertex = new HashMap <String,String>(); // a new updated Map with visited node
+		
+		queue.add(u);
+		visited.add(u);
+		while( !queue.isEmpty() )
+		{
+			String current = queue.remove();
+			if(current.equals(visited))
+				break;
+			
+			for( String vi : graph.get(current) ) {
+				if( !visited.contains(vi) ) {
+					queue.add(vi);
+					visited.add(vi);
+					
+					nextVertex.put(current,  vi);		//update map with visited nodes.
+				}
+			}
+		}
+		
+		//REconstruct the path here
+		
 		
 		return path;
 	}
