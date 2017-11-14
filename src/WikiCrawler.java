@@ -30,7 +30,7 @@ public class WikiCrawler {
         this.max = max;
         this.topics = topics;
         this.fileName = fileName;
-        requestCounter = 0;
+        //requestCounter = 0;
     }
 
     // NOTE: extractLinks takes the source HTML code, NOT a URL
@@ -117,23 +117,28 @@ public class WikiCrawler {
     	if(seedURL == null) return "";
     	
     	//requestCounter++;
-    	StringBuilder stringBuilder = new StringBuilder();
-        URL url = new URL(BASE_URL + seedURL);
-        
-        InputStream inputStream = url.openStream();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String toRead;
-        
-        while ((toRead = bufferedReader.readLine()) != null) {
-            stringBuilder.append(toRead);
-            stringBuilder.append(System.getProperty("line.separator"));
-        }
+    	StringBuilder content = new StringBuilder();
+        try {
+        	URL url = new URL(BASE_URL + seedURL);
+            InputStream inputStream = url.openStream();
+            
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+            	String LinetoRead;
+                
+                while ((LinetoRead = bufferedReader.readLine()) != null) {
+                    content.append(LinetoRead);
+                    content.append(System.getProperty("line.separator"));
+                }
+            }
+            
+        } catch (Exception e) {} //do something to handle exception here
+    	
         
         /* TAs recommend this to encapsulate the right content */
-    	int start = stringBuilder.toString().indexOf("<p>");
-    	int end = stringBuilder.toString().lastIndexOf("</p>");
+    	int start = content.toString().indexOf("<p>");
+    	int end = content.toString().lastIndexOf("</p>");
     	
-        return stringBuilder.toString().substring(start, end);
+        return content.toString().substring(start, end);
     }
 
 

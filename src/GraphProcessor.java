@@ -50,8 +50,8 @@ public class GraphProcessor
 	
 	private void addEdge(String u, String v) {
 		if(u == null || v == null 
-				|| u != null && !graph.containsKey(u)
-				|| u != null && graph.containsKey(u))
+					|| u != null && !graph.containsKey(u)
+					|| u != null && graph.containsKey(u))
 			return;
 		
 		graph.get(u).add(v);
