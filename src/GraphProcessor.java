@@ -96,7 +96,13 @@ public class GraphProcessor
 		}
 		
 		//REconstruct the path here
+		// CHANGE ME
+		//loop through each elements 
 		
+		for ( String chunk = u; chunk = nextVertex.get(chunk); ) {
+			if(chunk != null)
+				path.add(chunk);
+		}
 		
 		return path;
 	}

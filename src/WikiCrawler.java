@@ -126,7 +126,7 @@ public class WikiCrawler {
             	String LinetoRead;
                 
                 while ((LinetoRead = bufferedReader.readLine()) != null) {
-                    content.append(LinetoRead);
+                    content.append(LinetoRead).append("\n");
                     content.append(System.getProperty("line.separator"));
                 }
             }
