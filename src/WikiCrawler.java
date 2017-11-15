@@ -23,6 +23,7 @@ public class WikiCrawler {
     private ArrayList<String> topics;
     private String fileName;
 
+    private Map <String, ArrayList<String>> graph = new LinkedHashMap<>();
     private int requestCounter = 0;
     private static final int MAX_REQUEST_COUNTER = 50; //delay after each 'max-request-counter' requests
     
@@ -69,25 +70,47 @@ public class WikiCrawler {
     }
 
     public void crawl() throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-        HashSet<String> tobeVisited = new HashSet<>();
+        
+        //HashSet<String> tobeVisited = new HashSet<>();
         HashSet<String> visited = new HashSet<>();
         ArrayDeque<String> queue = new ArrayDeque<>();
 
-        out.write(String.valueOf(max));
+        //out.write(String.valueOf(max));
         int numVisited = 0;
-        String seedURL = this.seedURL;
-        String content = getContent(seedURL);
-        if (containTopics(content)) {
-            tobeVisited.add(seedURL);
-            queue.offer(seedURL);
-            numVisited++;
-        }
-        while (queue.size() != 0) {
+        //String seedURL = this.seedURL;
+        //String content = getContent(seedURL);
+        queue.add(seedURL);
+        visited.add(seedURL);
+//        if (containTopics(content)) {
+//            tobeVisited.add(seedURL);
+//            queue.offer(seedURL);
+//            numVisited++;
+//        }
+        while (queue.size() != 0 && numVisited < max) {
             seedURL = queue.poll();
+            graph.putIfAbsent(seedURL, new ArrayList<>());
             visited.add(seedURL);
-            content = getContent(seedURL);
+            String content = getContent(seedURL);
+            numVisited++;
+            
+            if(!containTopics(content))
+            	continue;
+            
             ArrayList<String> links = extractLinks(content);
+            
+            for(int i = 0; i < links.size() && i < max - 1; ++i) { //String u : links) {
+                String u = links.get(i);
+                if(!visited.contains(u)) {
+                    queue.add(u);
+                    visited.add(u);
+
+                    if(!graph.get(seedURL).contains(u)) {
+                        graph.get(seedURL).add(u);
+                    }
+                }
+            }
+        }
+            /*
             for (String link : links) {
                 if (link.equals(seedURL))
                     continue;
@@ -108,9 +131,18 @@ public class WikiCrawler {
                         writeToFile(out, seedURL, link);
                     }
                 }
+            } */
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(fileName))) {
+            out.write(String.valueOf(max));
+            for(String vertex : graph.keySet()) {
+                for (String edge : graph.get(vertex)) {
+                    out.newLine();
+                    out.write(vertex + " " + edge);
+                }
             }
+
         }
-        out.close();
+            
     }
 
     private String getContent(String seedURL) throws IOException {
@@ -162,10 +194,11 @@ public class WikiCrawler {
         return true;
     }
 
+    /* print out value for debugging
     private void writeToFile(BufferedWriter out, String from, String to) throws IOException {
         out.newLine();
         out.write(from + " " + to);
-    }
+    } */
 }
 
 
