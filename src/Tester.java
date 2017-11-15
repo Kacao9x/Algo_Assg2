@@ -11,6 +11,6 @@ public class Tester {
 				20, new ArrayList<>(), "WikiCC.txt");
 		crawler.crawl();
 		
-		//GraphProcessor graphPro = new GraphProcessor("Wiki.txt");
+		GraphProcessor graphPro = new GraphProcessor("WikiCC.txt");
 	}
 }

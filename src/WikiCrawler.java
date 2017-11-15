@@ -23,14 +23,15 @@ public class WikiCrawler {
     private ArrayList<String> topics;
     private String fileName;
 
-    //private int requestCounter = 0;
+    private int requestCounter = 0;
+    private static final int MAX_REQUEST_COUNTER = 50; //delay after each 'max-request-counter' requests
     
     public WikiCrawler(String seedUrl, int max, ArrayList<String> topics, String fileName) throws IOException {
         this.seedURL = seedUrl;
         this.max = max;
         this.topics = topics;
         this.fileName = fileName;
-        //requestCounter = 0;
+        requestCounter = 0;
     }
 
     // NOTE: extractLinks takes the source HTML code, NOT a URL
@@ -116,7 +117,17 @@ public class WikiCrawler {
     	
     	if(seedURL == null) return "";
     	
-    	//requestCounter++;
+    	requestCounter++;
+    	
+    	if(requestCounter == MAX_REQUEST_COUNTER) {
+    		try {
+    			Thread.sleep(3000);		//delay 3s
+    		} catch (InterruptedException e) {
+    			e.printStackTrace();
+    		}
+    		requestCounter = 0;			//reset counter
+    	}
+    	
     	StringBuilder content = new StringBuilder();
         try {
         	URL url = new URL(BASE_URL + seedURL);
