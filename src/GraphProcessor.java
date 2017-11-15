@@ -99,10 +99,15 @@ public class GraphProcessor
 		// CHANGE ME
 		//loop through each elements 
 		
-		for ( String chunk = u; chunk = nextVertex.get(chunk); ) {
-			if(chunk != null)
+		for ( String chunk = u; chunk !=null; chunk = nextVertex.get(chunk) ) {
 				path.add(chunk);
 		}
+		
+		//Path not found
+		if(!path.get(path.size() - 1).equals(v)) {
+            path.clear();
+            return path;
+        }
 		
 		return path;
 	}
